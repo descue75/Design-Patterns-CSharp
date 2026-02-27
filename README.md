@@ -8,6 +8,11 @@
 * A class should only have one reason to change
 * Seperation of concerns - different classes handling different, independent task/problems
 
+The Journal class should just handle adding and removing entries but not persitance.  [Journal.cs](SOLID/SingleResponsibility/Journal.cs)
+
+Instead you should create a seperate class to handle persistence.  [Persistence.cs](SOLID/SingleResponsibility/Persistence.cs)
+
+
 ### Open-Closed Principle
 
 * Classes should be open for extension but closed for modification
