@@ -1,3 +1,6 @@
 <Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="README.md" />
+  </Folder>
   <Project Path="SOLID/SOLID.csproj" Id="2e7c4719-1e59-4bf1-81a5-1d15de0fa9a9" />
 </Solution>

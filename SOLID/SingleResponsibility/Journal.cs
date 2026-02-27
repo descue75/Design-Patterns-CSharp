@@ -42,6 +42,6 @@ namespace SOLID.SingleResponsibility
         {
             throw new NotImplementedException();
         }
-        #endregion Breaks Single Responsibility Principle
+        #endregion
     }
 }
