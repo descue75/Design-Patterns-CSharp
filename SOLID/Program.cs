@@ -1,4 +1,5 @@
-﻿using SOLID.LiskovSubstitution;
+﻿using SOLID.DependencyInversion;
+using SOLID.LiskovSubstitution;
 using SOLID.LiskovSubstitution.Bad;
 using SOLID.OpenClosed;
 using SOLID.OpenClosed.Bad;
@@ -83,6 +84,19 @@ namespace SOLID
             Console.WriteLine($"{goodSquare} has area {goodSquare.Area}");
         }
 
+        private static void DependencyInversion()
+        {
+            var parent = new Person { Name = "John" };
+            var child1 = new Person { Name = "Chris" };
+            var child2 = new Person { Name = "Mary" };
+
+            var relationships = new Relationships();
+            relationships.AddParentAndChild(parent, child1);
+            relationships.AddParentAndChild(parent, child2);
+
+            new Research(relationships);
+        }
+
         static void Main(string[] args)
         {
             Console.WriteLine("Single Responsibility Principle\n");
@@ -91,6 +105,8 @@ namespace SOLID
             OpenClosed();
             Console.WriteLine("\nLiskov Substitution Principle\n");
             LiskovSubstitution();
+            Console.WriteLine("\nDependency Inversion Principle\n");
+            DependencyInversion();
         }
     }
 }

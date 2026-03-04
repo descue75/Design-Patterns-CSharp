@@ -103,6 +103,23 @@ IFaxer ([PhotoCopier.cs](SOLID/InterfaceSegregation/Photocopier.cs)).
 ---
 ### Dependency Inversion Principle
 
-* High-level modules should not depend upon low-level ones; use abstractions
+* High-level modules should not depend on low-level modules. Both should depend on abstractions.
+
+#### Example
+
+The high-level class [Research.cs](SOLID/DependencyInversion/Research.cs) should not access the low-level
+storage implementation in [Relationships.cs](SOLID/DependencyInversion/Relationships.cs), such as the
+`_relations` collection. If it did, the `Research` class would become tightly coupled to the internal
+storage structure of `Relationships`.
+
+This would mean that changing how relationships are stored (for example, switching from a list to a
+database or graph structure) would require modifying the high-level `Research` code.
+
+Instead, an abstraction is introduced with
+[IRelationshipBrowser.cs](SOLID/DependencyInversion/IRelationshipBrowser.cs).
+
+The low-level module `Relationships` implements this interface, while the high-level module `Research`
+depends only on the abstraction. This allows the internal implementation of `Relationships` to change
+without affecting the `Research` class.
 
 ---
