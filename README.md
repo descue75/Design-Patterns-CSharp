@@ -83,9 +83,24 @@ behaves consistently when used through a base class reference.
 ---
 ### Interface Segregation Principle
 
-* Don't put too much into an interface; split into seperate interfaces
+* Don't put too much into an interface; split into separate interfaces
 * YAGNI - You Ain't Going to Need It
 
+#### Example:
+
+[IMachine.cs](SOLID/InterfaceSegregation/Bad/IMachine.cs) has `Print`, `Scan`, and `Fax` functions but
+a regular printer may just want to implement the `Print` function, forcing you to implement useless
+functions ([Printer.cs](SOLID/InterfaceSegregation/Bad/Printer.cs)).
+
+Instead split them up into multiple interfaces ([IPrinter.cs](SOLID/InterfaceSegregation/IPrinter.cs), 
+[IFaxer.cs](SOLID/InterfaceSegregation/IFaxer.cs), [IScanner.cs](SOLID/InterfaceSegregation/IScanner.cs)).
+Now if you have a PhotoCopier you can implement IPrinter and IScanner and not be forced to implement
+IFaxer ([PhotoCopier.cs](SOLID/InterfaceSegregation/Photocopier.cs)).
+
+> [!NOTE] You can still define an interface that combines the other interfaces using composition 
+([IMultiFunctionDevice.cs](SOLID/InterfaceSegregation/IMultiFunctionDevice.cs)).
+
+---
 ### Dependency Inversion Principle
 
 * High-level modules should not depend upon low-level ones; use abstractions
