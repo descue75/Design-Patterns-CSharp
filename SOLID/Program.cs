@@ -1,4 +1,6 @@
-﻿using SOLID.OpenClosed;
+﻿using SOLID.LiskovSubstitution;
+using SOLID.LiskovSubstitution.Bad;
+using SOLID.OpenClosed;
 using SOLID.OpenClosed.Bad;
 using SOLID.SingleResponsibility;
 
@@ -6,7 +8,7 @@ namespace SOLID
 {
     class Program
     {
-        static void SingleResponsibility()
+        private static void SingleResponsibility()
         {
             var j = new Journal();
             j.AddEntry("I criend today.");
@@ -18,7 +20,7 @@ namespace SOLID
             p.SaveToFile(j, filename);
         }
 
-        static void OpenClosed()
+        private static void OpenClosed()
         {
             var products = new Product[]
             {
@@ -63,12 +65,32 @@ namespace SOLID
             }
         }
 
+        private static void LiskovSubstitution()
+        {
+            var rectangle = new Rectangle(2, 4);
+            Console.WriteLine($"{rectangle} has area {rectangle.Area}");
+
+            // Will not set width properly, as it is using the Rectangle Width setter
+            Rectangle badSquare = new BadSquare();
+            badSquare.Height = 4;
+            Console.WriteLine("Bad Square");
+            Console.WriteLine($"{badSquare} has area {badSquare.Area}");
+
+            // Functionality of Square should be preserved even if it is instantiated as a rectangle
+            Rectangle goodSquare = new Square();
+            goodSquare.Height = 4;
+            Console.WriteLine("Good Square");
+            Console.WriteLine($"{goodSquare} has area {goodSquare.Area}");
+        }
+
         static void Main(string[] args)
         {
             Console.WriteLine("Single Responsibility Principle\n");
             SingleResponsibility();
             Console.WriteLine("\nOpen-Closed Principle\n");
             OpenClosed();
+            Console.WriteLine("\nLiskov Substitution Principle\n");
+            LiskovSubstitution();
         }
     }
 }

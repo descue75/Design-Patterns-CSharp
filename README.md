@@ -51,12 +51,36 @@ that you want to be satisfied.  Now you can add additional specifications withou
 ([AndSpecification.cs](SOLID/OpenClosed/AndSpecification.cs)) and an or specification
 ([OrSpecification.cs](SOLID/OpenClosed/OrSpecification.cs)).
 
-
-
+---
 ### Liskov Substitution Principle
 
-* You should be able to substitute a base type for a subtype
+* Objects of a derived type should be substitutable anywhere the base type is expected without breaking
+program correctness.
 
+Polymorphism allows different types to be treated as the same base type while still executing their own
+behavior. This means code written for a base type should continue to work correctly when given any of its
+subtypes.
+
+#### Example:
+
+In the `Rectangle`/`Square` example, `Square` attempts to modify the behavior of `Rectangle` by forcing
+the width and height to always be equal.
+
+In [BadSquare.cs](SOLID/LiskovSubstitution/Bad/BadSquare.cs), the `Width` and `Height` properties hide
+the corresponding properties in [Rectangle.cs](SOLID/LiskovSubstitution/Rectangle.cs) using the `new`
+keyword.
+
+Because `new` hides the base class members instead of overriding them, polymorphism is broken. When a
+`BadSquare` instance is referenced as a `Rectangle`, the base class properties are used instead of the
+derived ones. This causes the object's behavior to depend on the **reference type** rather than the
+**actual object type**.
+
+The correct approach is shown in [Square.cs](SOLID/LiskovSubstitution/Square.cs), where `override`
+is used instead of `new`. This preserves polymorphic behavior and ensures that the derived type
+behaves consistently when used through a base class reference.
+
+
+---
 ### Interface Segregation Principle
 
 * Don't put too much into an interface; split into seperate interfaces
