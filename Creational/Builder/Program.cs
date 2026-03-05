@@ -1,2 +1,57 @@
-﻿// See https://aka.ms/new-console-template for more information
-Console.WriteLine("Hello, World!");
+﻿using System.Text;
+
+namespace Builder
+{
+    class Program
+    {
+        static void WithoutBuilder()
+        {
+            var hello = "hello";
+            var sb = new StringBuilder();
+            sb.Append("<p>");
+            sb.Append(hello);
+            sb.Append("</p>");
+            Console.WriteLine(sb);
+
+            var words = new[] { "hello", "world" };
+            sb.Clear();
+            sb.Append("<ul>");
+            foreach (string word in words)
+            {
+                sb.AppendFormat("<li>{0}</li>", word);
+            }
+            sb.Append("</ul>");
+            Console.WriteLine(sb);
+        }
+
+        static void WithBuilder()
+        {
+            var builder = new HtmlBuilder("ul");
+            builder.AddChild("li", "hello");
+            builder.AddChild("li", "world");
+            Console.WriteLine(builder);
+
+            // Fluent
+            builder.Clear();
+            builder.AddChild("li", "hello").AddChild("li", "world");
+            Console.WriteLine(builder);
+        }
+
+        static void FluentBuilderWithInheritance()
+        {
+            Person person = Person.New.Called("dmitri").WorksAsA("quant").Build();
+            Console.WriteLine(person);
+        }
+
+        static void Main(string[] args)
+        {
+            Console.WriteLine("Builder");
+            Console.WriteLine("Without Builder");
+            WithoutBuilder();
+            Console.WriteLine("With Builder");
+            WithBuilder();
+            Console.WriteLine("Fluent Builder with Inheritance");
+            FluentBuilderWithInheritance();
+        }
+    }
+}

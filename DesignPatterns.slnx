@@ -1,4 +1,7 @@
 <Solution>
+  <Folder Name="/Creational/">
+    <Project Path="Creational/Builder/Builder.csproj" Id="1c2a0053-0532-43b4-baf6-2ac39d4eaa57" />
+  </Folder>
   <Folder Name="/Solution Items/">
     <File Path="README.md" />
   </Folder>

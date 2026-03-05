@@ -123,6 +123,86 @@ depends only on the abstraction. This allows the internal implementation of `Rel
 without affecting the `Research` class.
 
 ***
-## <u>Design Patterns</u>
+## <u>Creational Design Patterns</u>
 
 ### Builder
+
+* Some objects are simple and can be created in a single constructor call. Other objects require a lot of
+ceremony to create.
+* Having an object with 10 constructor arguments is not productive. Instead, opt for piecewise construction.
+* Builder provides an API for constructing an object step-by-step.
+
+#### Example
+
+[HtmlElement.cs](Creational/Builder/HtmlElement.cs) contains a list of child `HtmlElement`s.  
+Instead of populating this list directly through a constructor or internal methods, a separate
+builder class is used: [HtmlBuilder.cs](Creational/Builder/HtmlBuilder.cs).
+
+`HtmlBuilder` creates an instance of `HtmlElement` and exposes an `AddChild` method that constructs
+a new `HtmlElement` and adds it to the root element's child list.
+
+> [!NOTE] `AddChild` returns the builder itself, allowing method calls to be chained. 
+This pattern is known as a **Fluent Builder**.
+
+To support fluent builders that use **inheritance**, recursive generics are required.
+
+[Person.cs](Creational/Builder/Person.cs) defines a `Person` with two fields: `Name` and `Position`.
+The builder is split into multiple classes so that different parts of the object can be constructed
+by different builders. For example:
+
+- [PersonInfoBuilder.cs](Creational/Builder/PersonInfoBuilder.cs) sets the `Name`
+- [PersonJobBuilder.cs](Creational/Builder/PersonJobBuilder.cs) (which inherits from `PersonInfoBuilder`)
+sets the `Position`
+
+Recursive generics ensure that each builder method returns the **most derived builder type** rather
+than a base builder type. This allows fluent chaining to continue across inherited builders without
+losing access to derived builder methods.
+```mermaid
+classDiagram
+    direction TB
+
+    class Person {
+        +string Name
+        +string Position
+        +Builder New
+        +ToString()
+    }
+
+    class PersonBuilder {
+        -Person person
+        +Build() Person
+    }
+
+    class PersonInfoBuilder~SELF~ {
+        +Called(name) SELF
+        SELF : PersonInfoBuilder~SELF~
+    }
+
+    class PersonJobBuilder~SELF~ {
+        +WorksAsA(position) SELF
+    }
+
+    class Builder {
+        <<concrete builder>>
+    }
+
+    PersonBuilder <|-- PersonInfoBuilder
+    PersonInfoBuilder <|-- PersonJobBuilder
+    PersonJobBuilder <|-- Builder
+    Person --> Builder
+
+```
+
+When the concrete builder is defined as:
+
+class Builder : PersonJobBuilder<Builder>
+
+the generic parameter resolves to:
+
+SELF = Builder
+
+This ensures fluent methods return the most derived builder type:
+
+Called()   → Builder  
+WorksAsA() → Builder  
+Build()    → Person
