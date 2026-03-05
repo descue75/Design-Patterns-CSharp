@@ -122,4 +122,7 @@ The low-level module `Relationships` implements this interface, while the high-l
 depends only on the abstraction. This allows the internal implementation of `Relationships` to change
 without affecting the `Research` class.
 
----
+***
+## <u>Design Patterns</u>
+
+### Builder
