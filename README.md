@@ -132,7 +132,7 @@ ceremony to create.
 * Having an object with 10 constructor arguments is not productive. Instead, opt for piecewise construction.
 * Builder provides an API for constructing an object step-by-step.
 
-#### Example
+#### Example:
 
 [HtmlElement.cs](Creational/Builder/HtmlElement.cs) contains a list of child `HtmlElement`s.  
 Instead of populating this list directly through a constructor or internal methods, a separate
@@ -144,7 +144,11 @@ a new `HtmlElement` and adds it to the root element's child list.
 > [!NOTE] `AddChild` returns the builder itself, allowing method calls to be chained. 
 This pattern is known as a **Fluent Builder**.
 
-To support fluent builders that use **inheritance**, recursive generics are required.
+#### <u>Fluent Builder Inheritance</u>
+
+* To support fluent builders that use **inheritance**, recursive generics are required.
+
+#### Example:
 
 [Person.cs](Creational/Builder/Person.cs) defines a `Person` with two fields: `Name` and `Position`.
 The builder is split into multiple classes so that different parts of the object can be constructed
@@ -193,16 +197,35 @@ classDiagram
 
 ```
 
-When the concrete builder is defined as:
-
-class Builder : PersonJobBuilder<Builder>
-
-the generic parameter resolves to:
-
-SELF = Builder
-
-This ensures fluent methods return the most derived builder type:
-
-Called()   → Builder  
+> [!NOTE] When the concrete builder is defined as:
+>
+>class Builder : PersonJobBuilder<Builder>
+>
+>the generic parameter resolves to:
+>
+>SELF = Builder
+>
+>This ensures fluent methods return the most derived builder type:
+>
+>Called()   → Builder  
 WorksAsA() → Builder  
 Build()    → Person
+
+
+#### <u>Stepwise Builder</u>
+
+* Force a specific build order using separate interfaces for the build steps.
+
+#### Example:
+
+Have a Car class ([Car.cs](Creational/Builder/StepwiseBuilder/Car.cs)) that uses a builder to set the
+type of car and the wheel size.  The wheel size needs to contain validation for allowable sizes based
+on the type of car. Therefore the type will have to be set before the wheel size.
+
+This can be accomplished by using separate interfaces for the build steps
+([ISpecifyCarType.cs](Creational/Builder/StepwiseBuilder/ISpecifyCarType.cs),
+[ISpecifyWheelSize.cs](Creational/Builder/StepwiseBuilder/ISpecifyWheelSize.cs))and then having a base
+build interface ([IBuildCar.cs](Creational/Builder/StepwiseBuilder/IBuildCar.cs)) that has a Build
+function definition. The concrete builder then can contain a private field that implements all the interfaces
+and dictates the order that the build implementation steps can be called due to the return types of each
+build step ([CarBuilder.cs](Creational/Builder/StepwiseBuilder/CarBuilder.cs)).

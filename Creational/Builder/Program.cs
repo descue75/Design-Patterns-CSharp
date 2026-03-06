@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using Builder.StepwiseBuilder;
+using System.Text;
 
 namespace Builder
 {
@@ -43,6 +44,16 @@ namespace Builder
             Console.WriteLine(person);
         }
 
+        static void StepwiseBuilder()
+        {
+            var car = CarBuilder.Create()  // ISpecifyCarType
+                .OfType(CarType.Crossover) // ISpecifyWheelSize
+                .WithWheels(18)            // IBuildCar
+                .Build();
+
+            Console.WriteLine(car);
+        }
+
         static void Main(string[] args)
         {
             Console.WriteLine("Builder");
@@ -52,6 +63,8 @@ namespace Builder
             WithBuilder();
             Console.WriteLine("Fluent Builder with Inheritance");
             FluentBuilderWithInheritance();
+            Console.WriteLine("Stepwise Builder");
+            StepwiseBuilder();
         }
     }
 }
