@@ -1,6 +1,9 @@
 ﻿using Builder.StepwiseBuilder;
 using Builder.FunctionalBuilder;
+using Builder.FacetedBuilder;
+using Builder.FluentBuilderInheritance;
 using System.Text;
+
 
 namespace Builder
 {
@@ -41,7 +44,7 @@ namespace Builder
 
         static void FluentBuilderWithInheritance()
         {
-            Person person = Person.New.Called("dmitri").WorksAsA("quant").Build();
+            FluentBuilderInheritance.Person person = FluentBuilderInheritance.Person.New.Called("dmitri").WorksAsA("quant").Build();
             Console.WriteLine(person);
         }
 
@@ -65,19 +68,36 @@ namespace Builder
             Console.WriteLine(person);
         }
 
+        static void FacetedBuilder()
+        {
+            var builder = new FacetedBuilder.PersonBuilder();
+            FacetedBuilder.Person person = builder
+                .Works.At("Fabrikam")
+                    .AsA("Engineer")
+                    .Earning(123000)
+                .Lives.At("123 London Road")
+                    .In("London")
+                    .withPostcode("SW12AC");
+
+            Console.WriteLine(person);
+        }
+
         static void Main(string[] args)
         {
             Console.WriteLine("Builder");
-            Console.WriteLine("Without Builder");
+            Console.WriteLine("_______");
+            Console.WriteLine("\nWithout Builder");
             WithoutBuilder();
-            Console.WriteLine("With Builder");
+            Console.WriteLine("\nWith Builder");
             WithBuilder();
-            Console.WriteLine("Fluent Builder with Inheritance");
+            Console.WriteLine("\nFluent Builder with Inheritance");
             FluentBuilderWithInheritance();
-            Console.WriteLine("Stepwise Builder");
+            Console.WriteLine("\nStepwise Builder");
             StepwiseBuilder();
-            Console.WriteLine("Functional Builder");
+            Console.WriteLine("\nFunctional Builder");
             FunctionalBuilder();
+            Console.WriteLine("\nFaceted Builder");
+            FacetedBuilder();
         }
     }
 }

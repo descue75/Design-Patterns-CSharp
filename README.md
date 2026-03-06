@@ -150,13 +150,13 @@ This pattern is known as a **Fluent Builder**.
 
 #### Example:
 
-[Person.cs](Creational/Builder/Person.cs) defines a `Person` with two fields: `Name` and `Position`.
-The builder is split into multiple classes so that different parts of the object can be constructed
-by different builders. For example:
+[Person.cs](Creational/Builder/FluentBuilderInheritance/Person.cs) defines a `Person` with two fields:
+`Name` and `Position`. The builder is split into multiple classes so that different parts of the object
+can be constructed by different builders. For example:
 
-- [PersonInfoBuilder.cs](Creational/Builder/PersonInfoBuilder.cs) sets the `Name`
-- [PersonJobBuilder.cs](Creational/Builder/PersonJobBuilder.cs) (which inherits from `PersonInfoBuilder`)
-sets the `Position`
+- [PersonInfoBuilder.cs](Creational/Builder/FluentBuilderInheritance/PersonInfoBuilder.cs) sets the `Name`
+- [PersonJobBuilder.cs](Creational/Builder/FluentBuilderInheritance/PersonJobBuilder.cs) (which inherits
+from `PersonInfoBuilder`) sets the `Position`
 
 Recursive generics ensure that each builder method returns the **most derived builder type** rather
 than a base builder type. This allows fluent chaining to continue across inherited builders without
@@ -260,3 +260,47 @@ The class is declared with the following constraints:
 Each builder method records an operation using `Do(Action<T>)`. Internally these actions are stored as
 `Func<T, T>` transformations that modify the object and return it. When `Build()` is called, a new `Person`
 is created and each stored function is applied in sequence to produce the final object.
+
+#### <u>Faceted Builder</u>
+
+* Split the construction of a complex object into multiple specialized builders (facets).
+
+#### Example:
+
+[Person.cs](Creational/Builder/FacetedBuilder/Person.cs) represents a `Person` object that contains
+properties belonging to two logical groups: **address information** (`StreetAddress`, `Postcode`,
+`City`) and **employment information** (`CompanyName`, `Position`, `AnnualIncome`). Rather than
+placing all builder functionality in a single class, the **Faceted Builder** pattern divides the
+construction of the object into separate builders that focus on different aspects of the object.
+
+[PersonBuilder.cs](Creational/Builder/FacetedBuilder/PersonBuilder.cs) acts as the **facade builder**.
+It creates the `Person` instance and exposes properties that return specialized builders:
+
+* `Lives` → returns a `PersonAddressBuilder`
+* `Works` → returns a `PersonJobBuilder`
+
+Each of these builders receives the same `Person` instance, ensuring all facets operate on the
+same object.
+
+[PersonAddressBuilder.cs](Creational/Builder/FacetedBuilder/PersonAddressBuilder.cs) is responsible
+for configuring the **address facet** of the `Person` object. It provides fluent methods such as:
+
+* `At(string streetAddress)`
+* `WithPostcode(string postcode)`
+* `In(string city)`
+
+These methods set the corresponding address properties and return the builder to support fluent
+method chaining.
+
+[PersonJobBuilder.cs](Creational/Builder/FacetedBuilder/PersonJobBuilder.cs) configures the
+**employment facet** of the `Person` object. It provides builder methods such as:
+
+* `At(string companyName)`
+* `AsA(string position)`
+* `Earning(int amount)`
+
+Like the address builder, these methods modify the shared `Person` instance and return the builder
+for continued chaining.
+
+Both facet builders inherit from `PersonBuilder`, allowing them to access the shared `Person`
+instance and enabling the builder to switch between facets during the construction process.
