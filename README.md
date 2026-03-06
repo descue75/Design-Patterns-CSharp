@@ -11,7 +11,7 @@
 The Journal class should just handle adding and removing entries but not persistence.
 [Journal.cs](SOLID/SingleResponsibility/Journal.cs)
 
-Instead you should create a seperate class to handle persistence.
+Instead you should create a separate class to handle persistence.
 [Persistence.cs](SOLID/SingleResponsibility/Persistence.cs)
 
 
@@ -211,7 +211,6 @@ classDiagram
 WorksAsA() → Builder  
 Build()    → Person
 
-
 #### <u>Stepwise Builder</u>
 
 * Force a specific build order using separate interfaces for the build steps.
@@ -224,8 +223,40 @@ on the type of car. Therefore the type will have to be set before the wheel size
 
 This can be accomplished by using separate interfaces for the build steps
 ([ISpecifyCarType.cs](Creational/Builder/StepwiseBuilder/ISpecifyCarType.cs),
-[ISpecifyWheelSize.cs](Creational/Builder/StepwiseBuilder/ISpecifyWheelSize.cs))and then having a base
+[ISpecifyWheelSize.cs](Creational/Builder/StepwiseBuilder/ISpecifyWheelSize.cs)) and then having a base
 build interface ([IBuildCar.cs](Creational/Builder/StepwiseBuilder/IBuildCar.cs)) that has a Build
 function definition. The concrete builder then can contain a private field that implements all the interfaces
 and dictates the order that the build implementation steps can be called due to the return types of each
 build step ([CarBuilder.cs](Creational/Builder/StepwiseBuilder/CarBuilder.cs)).
+
+#### <u>Functional Builder</u>
+
+* Use extension methods rather than inheritance to extend builder functionality.
+
+#### Example:
+
+[PersonBuilder.cs](Creational/Builder/FunctionalBuilder/PersonBuilder.cs) is a sealed class and contains
+a builder function to set the `Person`'s name but no builder function to set the occupation. That function
+can be implemented in a static extension class
+([PersonBuilderExtensions.cs](Creational/Builder/FunctionalBuilder/PersonBuilderExtensions.cs)).
+
+The extension method `WorksAs` adds additional fluent functionality to the builder without modifying the
+`PersonBuilder` class. This follows the **Open/Closed Principle** — the builder is closed for modification
+but open for extension.
+
+`PersonBuilder` inherits from
+[FunctionalBuilder.cs](Creational/Builder/FunctionalBuilder/FunctionalBuilder.cs), which provides the
+core functionality for the functional builder pattern. Instead of mutating the object directly, the builder
+records a sequence of functions that will be applied to the object when `Build()` is called.
+
+`FunctionalBuilder<TSubject, TSelf>` provides a reusable base implementation for functional
+builders. It separates the generic builder mechanics from the concrete builder implementation.
+
+`TSubject` represents the type of object being constructed, while `TSelf` represents the
+concrete builder type that inherits from `FunctionalBuilder`.
+
+The class is declared with the following constraints:
+
+Each builder method records an operation using `Do(Action<T>)`. Internally these actions are stored as
+`Func<T, T>` transformations that modify the object and return it. When `Build()` is called, a new `Person`
+is created and each stored function is applied in sequence to produce the final object.

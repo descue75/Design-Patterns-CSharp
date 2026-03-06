@@ -1,4 +1,5 @@
 ﻿using Builder.StepwiseBuilder;
+using Builder.FunctionalBuilder;
 using System.Text;
 
 namespace Builder
@@ -54,6 +55,16 @@ namespace Builder
             Console.WriteLine(car);
         }
 
+        static void FunctionalBuilder()
+        {
+            var person = new FunctionalBuilder.PersonBuilder()
+                .Called("Sarah")
+                .WorksAs("Developer")
+                .Build();
+
+            Console.WriteLine(person);
+        }
+
         static void Main(string[] args)
         {
             Console.WriteLine("Builder");
@@ -65,6 +76,8 @@ namespace Builder
             FluentBuilderWithInheritance();
             Console.WriteLine("Stepwise Builder");
             StepwiseBuilder();
+            Console.WriteLine("Functional Builder");
+            FunctionalBuilder();
         }
     }
 }
